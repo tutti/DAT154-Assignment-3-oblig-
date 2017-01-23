@@ -7,14 +7,12 @@
 #define MAX_LOADSTRING 100
 
 TrafficLight* tlHoriz = new TrafficLight(0);
-TrafficLight* tlVert = new TrafficLight(2);
+TrafficLight* tlVert = new TrafficLight(1);
 
 Lane* north = new Lane(tlVert);
 Lane* south = new Lane(tlVert);
 Lane* east = new Lane(tlHoriz);
 Lane* west = new Lane(tlHoriz);
-
-int test = 0;
 
 // Global Variables:
 HINSTANCE hInst;                                // current instance
@@ -156,9 +154,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_TIMER:
         {
-            //north->tick();
             east->tick();
-            //test++;
+            north->tick();
+            west->tick();
+            south->tick();
+            tlHoriz->tick();
+            tlVert->tick();
             InvalidateRect(hWnd, 0, true);
         }
         break;
@@ -170,6 +171,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             RECT rc;
             GetClientRect(hWnd, &rc);
             east->setLength(rc.right);
+            north->setLength(rc.bottom);
+            west->setLength(rc.right);
+            south->setLength(rc.bottom);
 
             HDC virt = CreateCompatibleDC(hdc);
             HBITMAP bitmap = CreateCompatibleBitmap(hdc, rc.right, rc.bottom);
@@ -181,16 +185,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             Drawing::drawTrafficLight(virt, tlVert, 35, 100);
             Drawing::drawTrafficLight(virt, tlHoriz, -80, 50);
             Drawing::drawTrafficLight(virt, tlHoriz, 80, -50);
-            /*Drawing::drawCar(virt, testCar, DIRECTION_UP);
-            Drawing::drawCar(virt, testCar, DIRECTION_DOWN);*/
-            //Drawing::drawLane(virt, north, DIRECTION_UP);
             Drawing::drawLane(virt, east, DIRECTION_RIGHT);
+            Drawing::drawLane(virt, north, DIRECTION_UP);
+            Drawing::drawLane(virt, west, DIRECTION_LEFT);
+            Drawing::drawLane(virt, south, DIRECTION_DOWN);
 
-            /*if (east->getFirstCar() != 0) {
+            /*/
+            if (east->getFirstCar() != 0) {
                 WCHAR sz[100];
-                wsprintf(sz, _T("%d"), east->getFirstCar()->getLanePosition());
+                wsprintf(sz, _T("%d"), north->countCars());
                 TextOut(virt, 100, 100, sz, wcslen(sz));
-            }*/
+            }
+            /**/
 
             BitBlt(hdc, 0, 0, rc.right, rc.bottom, virt, 0, 0, SRCCOPY);
 

@@ -1,23 +1,21 @@
 #include "Lane.h"
 
+#include <stdlib.h>
 #include "Car.h"
 #include "TrafficLight.h"
 
-int count = 0;
-
 void Lane::addCar() {
     // TODO Introduce variable car length (car types?)
-    Car* newCar = new Car(25, -200, this->lastCar, this);
+    Car* newCar = new Car(15 + (rand() % 40), -(this->length / 2) - 10, this->lastCar, this);
     this->lastCar = newCar;
     if (this->firstCar == 0) {
         this->firstCar = newCar;
     }
-    ++this->cars;
 }
 
 void Lane::cleanup() {
     // Remove all cars that have "left" the lane (gone outside the screen)
-    while (this->firstCar != 0 && this->firstCar->lanePosition + this->firstCar->length > (this->length / 2)) {
+    while (this->firstCar != 0 && this->firstCar->lanePosition - this->firstCar->length > (this->length / 2)) {
         Car* secondCar = this->firstCar->carBehind;
         delete this->firstCar;
         this->firstCar = secondCar;
@@ -54,16 +52,21 @@ void Lane::tick() {
     }
 
     // TODO This is testing code
-    if (count <= 0) {
+    if (this->count <= 0) {
         this->addCar();
-        count = 100;
+        this->count = 100;
     }
-    --count;
+    --this->count;
 
     // Perform cleanup
-    //this->cleanup();
+    this->cleanup();
 }
 
 int Lane::countCars() {
-    return this->cars;
+    if (firstCar == 0) return 0;
+    int count = 0;
+    for (Car* c = firstCar; c != 0; c = c->carBehind) {
+        ++count;
+    }
+    return count;
 }

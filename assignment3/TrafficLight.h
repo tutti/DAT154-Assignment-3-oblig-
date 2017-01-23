@@ -7,10 +7,14 @@
 
 class TrafficLight {
 private:
+    int tickCounter = 0;
     int state = 0;
 public:
+    TrafficLight(int state, int ticks);
     TrafficLight(int state);
-    void setState(int newState);
-    void advanceState();
     int getState();
+    void setState(int newState);
+    void tick();
+
+    //void advanceState();
 };
