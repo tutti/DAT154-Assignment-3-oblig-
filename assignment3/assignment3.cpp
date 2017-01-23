@@ -14,6 +14,9 @@ Lane* south = new Lane(tlVert);
 Lane* east = new Lane(tlHoriz);
 Lane* west = new Lane(tlHoriz);
 
+int pw = 20; // 20 in 100
+int pn = 20;
+
 // Global Variables:
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
@@ -113,12 +116,22 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
       return FALSE;
    }
 
-   SetTimer(hWnd, 0, 10, 0);
+   SetTimer(hWnd, 1, 10, 0); // Tick timer
+   SetTimer(hWnd, 2, 1000, 0); // Spawn timer
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
 
    return TRUE;
+}
+
+void tick() {
+    east->tick();
+    north->tick();
+    west->tick();
+    south->tick();
+    tlHoriz->tick();
+    tlVert->tick();
 }
 
 //
@@ -154,12 +167,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_TIMER:
         {
-            east->tick();
-            north->tick();
-            west->tick();
-            south->tick();
-            tlHoriz->tick();
-            tlVert->tick();
+            if (wParam == 1) {
+                tick();
+                tick();
+            } else if (wParam == 2) {
+                east->attemptSpawn(pw);
+                north->attemptSpawn(pn);
+                west->attemptSpawn(pw);
+                south->attemptSpawn(pn);
+            }
             InvalidateRect(hWnd, 0, true);
         }
         break;

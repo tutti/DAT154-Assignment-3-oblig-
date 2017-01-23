@@ -23,6 +23,9 @@ void Lane::cleanup() {
             secondCar->carInFront = 0;
         }
     }
+    if (this->firstCar == 0) {
+        this->lastCar = 0;
+    }
 }
 
 Lane::Lane(TrafficLight* trafficLight) {
@@ -52,21 +55,19 @@ void Lane::tick() {
     }
 
     // TODO This is testing code
-    if (this->count <= 0) {
+    /*if (this->count <= 0) {
         this->addCar();
         this->count = 100;
     }
-    --this->count;
+    --this->count;*/
 
     // Perform cleanup
     this->cleanup();
 }
 
-int Lane::countCars() {
-    if (firstCar == 0) return 0;
-    int count = 0;
-    for (Car* c = firstCar; c != 0; c = c->carBehind) {
-        ++count;
+void Lane::attemptSpawn(int chance) {
+    int randVal = (rand() % 100) + 1;
+    if (randVal <= chance) {
+        this->addCar();
     }
-    return count;
 }

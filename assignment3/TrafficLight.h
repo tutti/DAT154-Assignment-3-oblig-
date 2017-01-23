@@ -15,6 +15,4 @@ public:
     int getState();
     void setState(int newState);
     void tick();
-
-    //void advanceState();
 };

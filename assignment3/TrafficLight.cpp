@@ -23,10 +23,10 @@ void TrafficLight::setState(int state) {
 
 void TrafficLight::tick() {
     static int tickLimits[] = {
-        500, // Red
-        50, // Red-yellow
-        400, // Green
-        50 // Yellow
+        1000, // Red
+        100, // Red-yellow
+        800, // Green
+        100 // Yellow
     };
 
     if (++this->tickCounter >= tickLimits[this->state]) {
