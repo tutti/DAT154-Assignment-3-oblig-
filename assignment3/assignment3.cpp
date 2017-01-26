@@ -247,6 +247,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             EndPaint(hWnd, &ps);
         }
         break;
+    case WM_KEYDOWN:
+    {
+        switch(wParam)
+        {
+        case VK_UP:
+            pn += 10;
+            break;
+        case VK_DOWN:
+            pn -= 10;
+            break;
+        case VK_LEFT:
+            pw -= 10;
+            break;
+        case VK_RIGHT:
+            pw += 10;
+            break;
+        }
+        break;
+    }
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
