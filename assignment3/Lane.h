@@ -11,7 +11,6 @@ private:
     Car* lastCar = 0;
     TrafficLight* light = 0;
     int length = 0;
-    void addCar();
     void cleanup();
 public:
     Lane(TrafficLight* trafficLight);
@@ -21,4 +20,5 @@ public:
     Car* getLastCar();
     void tick();
     void attemptSpawn(int chance);
+    void addCar();
 };

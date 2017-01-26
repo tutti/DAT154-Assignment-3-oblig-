@@ -29,4 +29,5 @@ public:
     static void drawTrafficLight(HDC hdc, TrafficLight* tl, int x, int y);
     static void drawCar(HDC hdc, Car* car, int direction);
     static void drawLane(HDC hdc, Lane* lane, int direction);
+    static void write(HDC hdc, WCHAR* wc, int x, int y);
 };

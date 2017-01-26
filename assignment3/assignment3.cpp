@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "assignment3.h"
+#include <cstdio>
 
 #define MAX_LOADSTRING 100
 
@@ -27,6 +28,7 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Settings(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -148,6 +150,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+    case WM_LBUTTONDOWN:
+        {
+            west->addCar();
+            east->addCar();
+        }
+        break;
+    case WM_RBUTTONDOWN:
+        {
+            north->addCar();
+            south->addCar();
+        }
+        break;
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
@@ -156,6 +170,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
             case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+                break;
+            case ID_FILE_SETTINGS:
+                DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, Settings);
                 break;
             case IDM_EXIT:
                 DestroyWindow(hWnd);
@@ -206,6 +223,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             Drawing::drawLane(virt, west, DIRECTION_LEFT);
             Drawing::drawLane(virt, south, DIRECTION_DOWN);
 
+            WCHAR wc[4];
+            wsprintf(wc, _T("%d"), pw);
+            Drawing::write(virt, wc, -110, 30);
+            Drawing::write(virt, wc, 95, -70);
+            wsprintf(wc, _T("%d"), pn);
+            Drawing::write(virt, wc, -65, -125);
+            Drawing::write(virt, wc, 50, 80);
+
             /*/
             if (east->getFirstCar() != 0) {
                 WCHAR sz[100];
@@ -239,8 +264,47 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     {
     case WM_INITDIALOG:
         return (INT_PTR)TRUE;
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+        {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        break;
+    }
+    return (INT_PTR)FALSE;
+}
+
+INT_PTR CALLBACK Settings(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+        {
+            HWND pwedit = GetDlgItem(hDlg, IDC_EDIT1);
+            HWND pnedit = GetDlgItem(hDlg, IDC_EDIT3);
+            WCHAR str[4];
+            wsprintf(str, L"%d", pw);
+            SetWindowText(pwedit, str);
+            wsprintf(str, L"%d", pn);
+            SetWindowText(pnedit, str);
+            return (INT_PTR)TRUE;
+        }
 
     case WM_COMMAND:
+        if (LOWORD(wParam) == IDOK) {
+            HWND pwedit = GetDlgItem(hDlg, IDC_EDIT1);
+            HWND pnedit = GetDlgItem(hDlg, IDC_EDIT3);
+            WCHAR str[4];
+            char c[4];
+            GetWindowText(pwedit, str, 4);
+            sprintf_s(c, "%ws", str);
+            pw = atoi(c);
+            GetWindowText(pnedit, str, 4);
+            sprintf_s(c, "%ws", str);
+            pn = atoi(c);
+        }
         if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
         {
             EndDialog(hDlg, LOWORD(wParam));

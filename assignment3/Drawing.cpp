@@ -105,3 +105,7 @@ void Drawing::drawLane(HDC hdc, Lane* lane, int direction) {
         Drawing::drawCar(hdc, c, direction);
     }
 }
+
+void Drawing::write(HDC hdc, WCHAR* wc, int x, int y) {
+    TextOut(hdc, (Drawing::rc.right) / 2 + x, (Drawing::rc.bottom) / 2 + y, wc, wcslen(wc));
+}
