@@ -264,6 +264,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             pw += 10;
             break;
         }
+        if (pw > 100) pw = 100;
+        if (pw < 0) pw = 0;
+        if (pn > 100) pn = 100;
+        if (pn < 0) pn = 0;
         break;
     }
     case WM_DESTROY:
@@ -320,9 +324,13 @@ INT_PTR CALLBACK Settings(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             GetWindowText(pwedit, str, 4);
             sprintf_s(c, "%ws", str);
             pw = atoi(c);
+            if (pw > 100) pw = 100;
+            if (pw < 0) pw = 0;
             GetWindowText(pnedit, str, 4);
             sprintf_s(c, "%ws", str);
             pn = atoi(c);
+            if (pn > 100) pn = 100;
+            if (pn < 0) pn = 0;
         }
         if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
         {
